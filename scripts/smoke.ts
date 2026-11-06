@@ -57,3 +57,8 @@ console.log('\nX THREAD posts:', format(x.content, 'x').content.split('\n\n---\n
 const textOnly = '# 一个只有文字的稿子\n\n' + '正文没有任何图片，纯文字论述。'.repeat(120)
 const r2 = reviewDraft(textOnly, 'wechat')
 console.log('\nTEXT-ONLY publishable(wechat):', r2.publishable, '| rules:', r2.findings.map(f => f.rule).join(', '))
+
+// All three figures at the top with a long text tail -> figures-clustered warn; WeChat body wrapped in <section>.
+const clustered = '# 标题\n\n![a](f1.png)\n\n![b](f2.png)\n\n![c](f3.png)\n\n' + Array.from({ length: 40 }, () => '后段正文一段。').join('\n\n')
+console.log('CLUSTERED rules:', reviewDraft(clustered, 'wechat').findings.map(f => f.rule).join(', '))
+console.log('WECHAT wrapped in <section>:', format(clustered, 'wechat').content.startsWith('<section'))

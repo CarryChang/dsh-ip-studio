@@ -185,12 +185,13 @@ function toBlog(md: string): string {
 export function format(md: string, platform: Platform): FormattedOutput {
   switch (platform) {
     case 'wechat': {
-      const content = toWechatHtml(md)
+      const inner = toWechatHtml(md)
+      const content = `<section style="font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;line-height:1.8;color:${TEXT};word-break:break-word">${inner}</section>`
       const notes: string[] = []
-      if (content.includes('<table')) {
+      if (inner.includes('<table')) {
         notes.push('正文含表格：微信草稿不渲染 <table>，发布前用 render 工具把每张表转成 PNG 再替换。')
       }
-      if (/<img class="rich_pages/.test(content)) {
+      if (/<img class="rich_pages/.test(inner)) {
         notes.push('正文图片用了微信规范标签但 data-ratio/data-w 仍为 0：adapter 上传取真实宽高后回填，否则编辑器可能不显示。')
       }
       return { platform, content, notes }
