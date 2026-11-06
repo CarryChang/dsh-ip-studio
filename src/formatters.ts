@@ -39,13 +39,14 @@ function esc(text: string): string {
 }
 
 /**
- * WeChat body image tag. The `class="rich_pages wxw-img"` plus data-* attributes are what make the
- * editor mount the image; a bare `<img src>` is normalized to a hidden `data-src` and shows as zero
- * images. Real ratio/width/type are filled by the adapter after upload; here they stay neutral.
+ * WeChat body image tag. The path is written to `src` (not the editor-only `data-src`) so the
+ * generated HTML renders in a local browser preview; `class="rich_pages wxw-img"` stays for the
+ * editor. Real ratio/width/type and the CDN URL are filled by the adapter after upload; here they
+ * stay neutral.
  */
 function imgTag(src: string): string {
   const type = (src.match(/\.(png|jpe?g|gif|webp)$/i)?.[1] ?? 'png').replace('jpg', 'jpeg')
-  return `<img class="rich_pages wxw-img" data-ratio="0" data-w="0" data-type="${type}" data-src="${esc(src)}"`
+  return `<img class="rich_pages wxw-img" data-ratio="0" data-w="0" data-type="${type}" src="${esc(src)}"`
     + ` style="width:100%;height:auto;display:block;margin:1em 0">`
 }
 
