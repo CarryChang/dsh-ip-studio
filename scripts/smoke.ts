@@ -1,5 +1,6 @@
 import { reviewDraft, asPlatform } from '../src/review.ts'
 import { format } from '../src/formatters.ts'
+import { SKILL_BODY, SKILL_NAME } from '../src/methodology.ts'
 
 const draft = `# 测题最准的模型，为什么只解决了 69.5% 的 agent 任务
 
@@ -75,3 +76,6 @@ console.log('\nTEXT-ONLY publishable(wechat):', r2.publishable, '| rules:', r2.f
 const clustered = '# 标题\n\n![a](f1.png)\n\n![b](f2.png)\n\n![c](f3.png)\n\n' + Array.from({ length: 40 }, () => '后段正文一段。').join('\n\n')
 console.log('CLUSTERED rules:', reviewDraft(clustered, 'wechat').findings.map(f => f.rule).join(', '))
 console.log('WECHAT wrapped in <section>:', format(clustered, 'wechat').content.startsWith('<section'))
+
+// Guard: importing methodology above fails hard if its template literal is malformed (unescaped backtick).
+console.log('METHODOLOGY loaded OK:', typeof SKILL_BODY === 'string' && SKILL_BODY.length > 1000, '| chars:', SKILL_BODY.length, '| skill:', SKILL_NAME)

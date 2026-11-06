@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-11-07
+
+### 修复
+
+- 修复启动时报 `SyntaxError: Missing initializer in const declaration` / `ip-studio failed to import`：`methodology.ts` 的 SKILL_BODY 模板字符串被新增行里的反引号提前终止，现去除该反引号。
+- 防回归：冒烟脚本现在强制 import methodology（模板字符串再被截断会当场报错）。
+
 ## [0.6.0] - 2026-11-07
 
 ### 新增

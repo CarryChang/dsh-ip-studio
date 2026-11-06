@@ -90,8 +90,8 @@ export const SKILL_BODY = `# 认知差写作宪法（IP Studio）
 - 每张图配一句斜体中文图注，说明「该看什么」；移动端建议 ≤10–12 张。
 - 草稿正文图片必须是微信规范标签（class="rich_pages wxw-img" 带 data-ratio/data-w/data-type），否则编辑器里图片不可见。
 - 成稿必须图文混排：零配图会被 ip_studio_review 以 no-figures 拦下（公众号为 blocker）；专业长稿至少含原图 / 表格图 / 一张自绘框架示意图。
-- 各平台都保留配图（不丢图）：公众号渲染 `<figure>`+图注、小红书输出按序配图清单、X 逐条 `📎 配图`；`ip_studio_format` 同时返回 `images` 供 adapter 统一上传。
-- 交付排版可传 `brand` 主题色（接 config/publish.example.json 的 brand）；缺图注、非法图名时 `ip_studio_format` 会自动补占位图注并给出 ASCII 改名建议。
+- 各平台都保留配图（不丢图）：公众号渲染 figure+图注、小红书输出按序配图清单、X 逐条「📎 配图」；ip_studio_format 同时返回 images 字段供 adapter 统一上传。
+- 交付排版可传 brand 主题色（接 config/publish.example.json 的 brand）；缺图注、非法图名时 ip_studio_format 会自动补占位图注并给出 ASCII 改名建议。
 
 ## 融合与自检
 
