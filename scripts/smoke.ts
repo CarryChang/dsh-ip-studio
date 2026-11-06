@@ -1,6 +1,7 @@
 import { reviewDraft, asPlatform } from '../src/review.ts'
 import { format } from '../src/formatters.ts'
 import { SKILL_BODY, SKILL_NAME } from '../src/methodology.ts'
+import { buildOutline } from '../src/outline.ts'
 
 const draft = `# 测题最准的模型，为什么只解决了 69.5% 的 agent 任务
 
@@ -79,3 +80,9 @@ console.log('WECHAT wrapped in <section>:', format(clustered, 'wechat').content.
 
 // Guard: importing methodology above fails hard if its template literal is malformed (unescaped backtick).
 console.log('METHODOLOGY loaded OK:', typeof SKILL_BODY === 'string' && SKILL_BODY.length > 1000, '| chars:', SKILL_BODY.length, '| skill:', SKILL_NAME)
+
+// Deterministic perceptive-gap outline seeds the skeleton with scraped facts.
+const material = '# 方法\n论文报告 69.5% 的任务解决率，比基线提升 2.3 倍。Figure 1 给出架构，Table 2 对比。这不是简单的测题能力，而是任务能力被高估了。\n## 实验\n样本量仅 360 条。'
+const outline = buildOutline(material, { titleHint: 'agent 评测' })
+console.log('\nOUTLINE seeds numbers:', outline.seeds.numbers.length, 'pivots:', outline.seeds.pivots.length, 'figures:', outline.seeds.figures.length, 'headings:', outline.seeds.headings.length)
+console.log('OUTLINE has 可带走框架:', outline.markdown.includes('可以带走的 3 个判断'), '| seeded 69.5%:', outline.markdown.includes('69.5%'), '| seeded pivot:', outline.markdown.includes('而是任务能力'))

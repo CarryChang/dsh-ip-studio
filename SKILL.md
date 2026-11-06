@@ -53,5 +53,6 @@ agent_created: true
 
 ## 工具
 
+- `ip_studio_outline(material, titleHint?)`：从抽取正文确定性生成认知差七段式骨架，预填硬数字/被推翻假设候选/图表线索，供 agent 填判断与可带走框架。动笔前先跑。
 - `ip_studio_review(markdown, platform?)`：红线与排版终检，返回 `{ findings, publishable }`。定稿前必跑。
 - `ip_studio_format(markdown, platform?, brand?)`：Markdown → wechat/zhihu/xiaohongshu/x/blog 成品，返回 `{ content, images, notes }`。各平台都保留配图与图注（`images` 为待上传的本地图清单）；缺图注会自动补占位图注、非法图名会给 ASCII 改名建议；可传 `brand` 注入主题色（接 config/publish.example.json 的 brand）。

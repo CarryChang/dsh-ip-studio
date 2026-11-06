@@ -14,6 +14,7 @@ import type {} from '@deepseek-ai/dsh-skill'
 import { SKILL_NAME, SKILL_DESCRIPTION, SKILL_WHEN_TO_USE, SKILL_BODY } from './methodology.ts'
 import { reviewDraft, asPlatform, PLATFORMS, type Platform } from './review.ts'
 import { format, type Brand } from './formatters.ts'
+import { buildOutline } from './outline.ts'
 
 export const name = 'ip-studio'
 export const inject = ['skills', 'tools']
@@ -124,6 +125,32 @@ export async function apply(ctx: Context, config: Config): Promise<void> {
       title: `Format for ${args.platform ?? defaultPlatform}`,
       kind: 'other',
       rawInput: { platform: args.platform ?? defaultPlatform, themed: args.brand !== undefined },
+    }),
+  })))
+
+  ctx.effect(() => ctx.tools.register(defineTool({
+    name: 'ip_studio_outline',
+    description:
+      'Build a deterministic perceptive-gap (认知差) outline from extracted material text. '
+      + 'Scrapes headline numbers, overturned-assumption hints, figure/table mentions and section '
+      + 'headings into a seven-part skeleton the agent then fills with judgment and a takeaway '
+      + 'framework. Offline, no model. Use it before drafting to seed the framework and the figure plan.',
+    parameters: {
+      material: { type: 'string', required: true, description: 'Extracted material text (paper / article / notes).' },
+      titleHint: { type: 'string', description: 'Optional subject echoed into the title slot.' },
+    },
+    output: {
+      schema: { type: 'string' },
+      render: (_args, value) => [{ type: 'text', text: JSON.stringify(JSON.parse(value), null, 2) }],
+    },
+    execute(args) {
+      return Promise.resolve(JSON.stringify(buildOutline(args.material, { titleHint: args.titleHint })))
+    },
+    presentCall: args => ({
+      card: 'generic',
+      title: 'Build perceptive-gap outline',
+      kind: 'other',
+      rawInput: { subject: args.titleHint ?? '', chars: args.material.length },
     }),
   })))
 }
