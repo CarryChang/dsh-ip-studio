@@ -1,7 +1,7 @@
 {
   "name": "dsh-ip-studio",
   "description": "Content/IP studio for DeepSeek Harness: a 认知差 (perceptive-gap) writing methodology skill plus deterministic draft-review and multi-platform formatting tools (WeChat / Zhihu / Xiaohongshu / X / blog). Zero network, zero credentials, zero install scripts.",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "icon": "./icon.svg",
   "type": "module",
   "main": "lib/index.js",
