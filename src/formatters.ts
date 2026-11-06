@@ -12,6 +12,8 @@ export interface FormattedOutput {
   platform: Platform
   /** The formatted body: HTML for web channels, text/markdown otherwise. */
   content: string
+  /** Ordered ASCII local image files referenced, for the adapter to upload on every channel. */
+  images: string[]
   /** Follow-up steps the adapter or author must still do; empty when the output is final. */
   notes: string[]
 }
@@ -68,6 +70,23 @@ function standaloneImage(rows: string[]): string | null {
   const m = (rows[0] ?? '').match(/^!\[[^\]]*\]\(([^)]+?)\)\s*$/)
   if (!m) return null
   return (m[1] ?? '').replace(/\s+["'].*["']\s*$/, '').trim()
+}
+
+/** Ordered figures: each lone image line with an optional following italic caption line. */
+function collectImages(md: string): { src: string; caption?: string }[] {
+  const rows = md.replace(/\r\n/g, '\n').split('\n')
+  const out: { src: string; caption?: string }[] = []
+  for (let i = 0; i < rows.length; i++) {
+    const m = (rows[i] ?? '').match(/^!\[[^\]]*\]\(([^)]+?)\)\s*$/)
+    if (!m) continue
+    const src = (m[1] ?? '').replace(/\s+["'].*["']\s*$/, '').trim()
+    let j = i + 1
+    while (j < rows.length && (rows[j] ?? '').trim() === '') j++
+    const next = (rows[j] ?? '').trim()
+    const caption = isCaption(next) ? captionText(next) : undefined
+    out.push(caption ? { src, caption } : { src })
+  }
+  return out
 }
 
 /** Render GitHub markdown tables to HTML tables; WeChat needs them as images instead. */
@@ -142,17 +161,32 @@ function toWechatHtml(md: string): string {
   return out.join('\n')
 }
 
-/** Split text into X posts of at most 280 characters at paragraph/sentence boundaries. */
+/** Split markdown into X posts, keeping each figure as a media post with its caption. */
 function toXThread(md: string): string[] {
-  const paras = md.split(/\n{2,}/).map(p => p.replace(/^#{1,4}\s+/, '').replace(/[*_`>#]/g, '').trim()).filter(Boolean)
+  const capOf = new Map(collectImages(md).filter(im => im.caption).map(im => [im.src, im.caption as string]))
+  const blocks = md.replace(/\r\n/g, '\n').split(/\n{2,}/)
   const posts: string[] = []
-  for (const para of paras) {
-    let rest = para
-    while (rest.length > 280) {
-      let cut = rest.lastIndexOf(' ', 280)
+  for (const block of blocks) {
+    const rows = block.split('\n')
+    const img = standaloneImage(rows)
+    if (img !== null) {
+      const cap = capOf.get(img)
+      posts.push(`📎 配图 ${img}${cap ? `：${cap}` : ''}`)
+      continue
+    }
+    const text = rows.join(' ')
+      .replace(/^#{1,4}\s+/, '')
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/[*_`>]/g, '')
+      .trim()
+    if (!text) continue
+    let rest = text
+    while (rest.length > 270) {
+      let cut = rest.lastIndexOf(' ', 270)
       if (cut < 100) {
         const stop = rest.search(/[。！？.!?]\s*/)
-        cut = stop < 0 ? 280 : stop + 1
+        cut = stop < 0 ? 270 : stop + 1
       }
       posts.push(rest.slice(0, cut).trim())
       rest = rest.slice(cut).trim()
@@ -162,12 +196,18 @@ function toXThread(md: string): string[] {
   return posts.map((p, i) => `${i + 1}/${posts.length} ${p}`)
 }
 
-/** Condense markdown into a Xiaohongshu-style short note with emoji bullets. */
+/** 小红书：标题 + 正文要点 + 按序配图清单（图文混排，图片不丢弃）。 */
 function toXiaohongshu(md: string): string {
   const title = md.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? ''
-  const points = [...md.matchAll(/^[-*]\s+(.+)$|^\d+\.\s+(.+)$/gm)].map(m => (m[1] ?? m[2] ?? '').trim())
-  const body = points.slice(0, 6).map(p => `🔸 ${p}`).join('\n')
-  return `${title}\n\n${body || md.replace(/[#*>`]/g, '').trim().slice(0, 800)}`
+  const points = [...md.matchAll(/^[-*]\s+(.+)$|^\d+[.)]\s+(.+)$/gm)].map(m => (m[1] ?? m[2] ?? '').trim()).filter(Boolean)
+  const imgs = collectImages(md)
+  const body = points.length
+    ? points.slice(0, 8).map(p => `🔸 ${p}`).join('\n')
+    : md.replace(/[#*>`]/g, '').replace(/!\[[^\]]*\]\([^)]*\)/g, '').trim().slice(0, 800)
+  const figBlock = imgs.length
+    ? `\n\n【配图 ${imgs.length} 张·按序上传】\n` + imgs.map((im, idx) => `${idx + 1}. ${im.src}${im.caption ? `｜${im.caption}` : ''}`).join('\n')
+    : ''
+  return `${title}\n\n${body}${figBlock}`
 }
 
 /** Wrap markdown with blog front-matter, keeping the source as the body. */
@@ -183,6 +223,7 @@ function toBlog(md: string): string {
  * @returns the {@link FormattedOutput} body plus adapter follow-up notes.
  */
 export function format(md: string, platform: Platform): FormattedOutput {
+  const images = collectImages(md).map(im => im.src)
   switch (platform) {
     case 'wechat': {
       const inner = toWechatHtml(md)
@@ -194,15 +235,15 @@ export function format(md: string, platform: Platform): FormattedOutput {
       if (/<img class="rich_pages/.test(inner)) {
         notes.push('正文图片用了微信规范标签但 data-ratio/data-w 仍为 0：adapter 上传取真实宽高后回填，否则编辑器可能不显示。')
       }
-      return { platform, content, notes }
+      return { platform, content, images, notes }
     }
     case 'zhihu':
-      return { platform, content: md, notes: ['知乎支持 Markdown 表格与图片链接，成稿可直接粘贴；图片建议先转 https 图床。'] }
+      return { platform, content: md, images, notes: ['知乎支持 Markdown 表格与图片链接，成稿可直接粘贴；本地图片（见 images）建议先转 https 图床。'] }
     case 'x':
-      return { platform, content: toXThread(md).join('\n\n---\n\n'), notes: ['已按 ≤280 字切分为 thread，逐条发布。'] }
+      return { platform, content: toXThread(md).join('\n\n---\n\n'), images, notes: [`已按 ≤280 字切分为 thread，逐条发布。${images.length ? `其中 ${images.length} 条为配图推文，按 images 顺序附对应文件。` : ''}`] }
     case 'xiaohongshu':
-      return { platform, content: toXiaohongshu(md), notes: ['已压缩为小红书短笔记；封面与话题标签在发布端补充。'] }
+      return { platform, content: toXiaohongshu(md), images, notes: [images.length ? `已按图文混排整理：正文要点 + ${images.length} 张配图按序列出（见 images）；封面从配图另选或补白。` : '已压缩为小红书短笔记；建议补 1–3 张配图。'] }
     case 'blog':
-      return { platform, content: toBlog(md), notes: ['已加 front-matter，draft: true，发布前改为 false。'] }
+      return { platform, content: toBlog(md), images, notes: ['已加 front-matter，draft: true，发布前改为 false。', images.length ? `引用本地图片 ${images.length} 张（见 images），发布前拷入站点静态目录。` : ''] }
   }
 }

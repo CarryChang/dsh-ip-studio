@@ -53,4 +53,4 @@ agent_created: true
 ## 工具
 
 - `ip_studio_review(markdown, platform?)`：红线与排版终检，返回 `{ findings, publishable }`。定稿前必跑。
-- `ip_studio_format(markdown, platform?)`：Markdown → wechat/zhihu/xiaohongshu/x/blog 成品，返回 `{ content, notes }`。
+- `ip_studio_format(markdown, platform?)`：Markdown → wechat/zhihu/xiaohongshu/x/blog 成品，返回 `{ content, images, notes }`。各平台都保留配图与图注（`images` 为待上传的本地图清单）。

@@ -86,7 +86,7 @@ export async function apply(ctx: Context, config: Config): Promise<void> {
     description:
       'Format a markdown draft for one publishing channel, offline: WeChat inline-style HTML '
       + '(with the rich_pages wxw-img image-tag convention), Zhihu markdown, Xiaohongshu short note, '
-      + 'X thread split at 280 chars, or blog front-matter. Returns the formatted body plus any '
+      + 'X thread split at 280 chars, or blog front-matter. Returns the formatted body, the ordered local image list, and any '
       + 'adapter follow-up notes. It never uploads images or calls a platform API.',
     parameters: {
       markdown: { type: 'string', required: true, description: 'The raw markdown draft to format.' },

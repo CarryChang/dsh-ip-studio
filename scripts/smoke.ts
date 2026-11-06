@@ -50,6 +50,12 @@ console.log('\nRICH WECHAT (figure+caption group / ol / hr / code):\n', format(r
 const richReview = reviewDraft(rich, 'wechat')
 console.log('RICH rules:', richReview.findings.map(f => f.rule).join(', ') || '(none)', '| publishable:', richReview.publishable)
 
+// Cross-platform figure preservation + images list.
+const xhs = format(rich, 'xiaohongshu')
+const xth = format(rich, 'x')
+console.log('XHS has 配图 list:', xhs.content.includes('【配图'), '| images:', JSON.stringify(xhs.images))
+console.log('X has media post:', xth.content.includes('📎 配图 fig1.png'), '| images:', JSON.stringify(xth.images))
+
 const x = format('# T\n\n' + '很长的一段中文内容。'.repeat(30), 'x')
 console.log('\nX THREAD posts:', format(x.content, 'x').content.split('\n\n---\n\n').length)
 

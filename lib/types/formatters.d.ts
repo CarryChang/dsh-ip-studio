@@ -10,6 +10,8 @@ export interface FormattedOutput {
     platform: Platform;
     /** The formatted body: HTML for web channels, text/markdown otherwise. */
     content: string;
+    /** Ordered ASCII local image files referenced, for the adapter to upload on every channel. */
+    images: string[];
     /** Follow-up steps the adapter or author must still do; empty when the output is final. */
     notes: string[];
 }
