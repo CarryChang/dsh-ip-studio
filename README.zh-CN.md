@@ -5,7 +5,7 @@
 把论文、素材、资讯整理成**可发布成稿**的个人 IP 内容引擎，作为 DeepSeek Harness（DSH）插件分发。
 它不是绑死单一账号的脚本流水线，而是「一份可复用的认知差写作方法论 + 两个确定性工具 + 外置发布 adapter」。
 
-[![npm](https://img.shields.io/npm/v/dsh-ip-studio.svg)](https://www.npmjs.com/package/dsh-ip-studio)
+[![从 GitHub 安装](https://img.shields.io/badge/dsh%20plugin%20add-github-4F46E5.svg)](#安装)
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](LICENSE)
 [![Topic: dsh-plugin](https://img.shields.io/badge/ecosystem-dsh--plugin-purple.svg)](https://github.com/topics/dsh-plugin)
 
@@ -28,17 +28,16 @@
 前提：已安装 `dsh` CLI，且目标 profile（如 `web`）已初始化。
 
 ```sh
-# A) 从 npm 装进 profile
-dsh plugin --profile web add dsh-ip-studio
-
-# B) 从 Git 装
+# 推荐 — 直接从 GitHub 装进 profile（lib/ 已入库，你这边无需构建）：
 dsh plugin --profile web add github:CarryChang/dsh-ip-studio
 
-# C) 本地开发：克隆后以 link 安装
+# 或本地开发：克隆后以 link 安装
 git clone https://github.com/CarryChang/dsh-ip-studio.git
 cd dsh-ip-studio && pnpm install && pnpm run build
 dsh plugin --profile web add link:.
 ```
+
+> npm 发布为后续计划；发布后 `dsh plugin --profile web add dsh-ip-studio` 也可直接用。
 
 装完后插件的 `cordis.patch.yml` 层会自动进入 profile 配置栈。验证：
 

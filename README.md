@@ -7,7 +7,7 @@ Turn papers, notes and news into **publish-ready drafts** that build a personal 
 account-coupled script pipeline: it keeps the hard-to-copy asset — a perceptive-gap (认知差) writing
 methodology — and turns the fragile platform glue into pluggable, credential-separated external adapters.
 
-[![npm](https://img.shields.io/npm/v/dsh-ip-studio.svg)](https://www.npmjs.com/package/dsh-ip-studio)
+[![Install from GitHub](https://img.shields.io/badge/dsh%20plugin%20add-github-4F46E5.svg)](#install)
 [![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](LICENSE)
 [![Topic: dsh-plugin](https://img.shields.io/badge/ecosystem-dsh--plugin-purple.svg)](https://github.com/topics/dsh-plugin)
 
@@ -39,17 +39,16 @@ kept outside the package.
 Requires the `dsh` CLI and an initialized profile (for example `web`).
 
 ```sh
-# A) from npm
-dsh plugin --profile web add dsh-ip-studio
-
-# B) from Git
+# Recommended — install straight from GitHub (lib/ is committed, no build on your side):
 dsh plugin --profile web add github:CarryChang/dsh-ip-studio
 
-# C) local development
+# Or from a local clone during development:
 git clone https://github.com/CarryChang/dsh-ip-studio.git
 cd dsh-ip-studio && pnpm install && pnpm run build
 dsh plugin --profile web add link:.
 ```
+
+> npm publish is planned; once live, `dsh plugin --profile web add dsh-ip-studio` will also work.
 
 The plugin's `cordis.patch.yml` layer joins the profile's config stack automatically. Verify:
 
