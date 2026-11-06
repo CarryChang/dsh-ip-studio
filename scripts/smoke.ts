@@ -56,6 +56,13 @@ const xth = format(rich, 'x')
 console.log('XHS has 配图 list:', xhs.content.includes('【配图'), '| images:', JSON.stringify(xhs.images))
 console.log('X has media post:', xth.content.includes('📎 配图 fig1.png'), '| images:', JSON.stringify(xth.images))
 
+// Theme injection + auto placeholder caption + ASCII rename fix.
+const broken = '# 测试：带判断的标题\n\n![没有图注的图](Figure 1.png)\n\n## 小节\n\n一段正文，讲一个框架模型。'
+const wb = format(broken, 'wechat', { accent: '#FF0000', name: '某品牌' })
+console.log('THEME accent #FF0000 applied:', wb.content.includes('#FF0000'))
+console.log('PLACEHOLDER caption injected:', wb.content.includes('图注待补'))
+console.log('RENAME fix:', wb.notes.some(n => n.includes('重命名为')), '| CAPTION fix:', wb.notes.some(n => n.includes('缺图注')))
+
 const x = format('# T\n\n' + '很长的一段中文内容。'.repeat(30), 'x')
 console.log('\nX THREAD posts:', format(x.content, 'x').content.split('\n\n---\n\n').length)
 

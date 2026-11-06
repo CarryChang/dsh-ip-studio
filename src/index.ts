@@ -13,7 +13,7 @@ import { defineTool } from '@deepseek-ai/dsh-tools'
 import type {} from '@deepseek-ai/dsh-skill'
 import { SKILL_NAME, SKILL_DESCRIPTION, SKILL_WHEN_TO_USE, SKILL_BODY } from './methodology.ts'
 import { reviewDraft, asPlatform, PLATFORMS, type Platform } from './review.ts'
-import { format } from './formatters.ts'
+import { format, type Brand } from './formatters.ts'
 
 export const name = 'ip-studio'
 export const inject = ['skills', 'tools']
@@ -86,14 +86,28 @@ export async function apply(ctx: Context, config: Config): Promise<void> {
     description:
       'Format a markdown draft for one publishing channel, offline: WeChat inline-style HTML '
       + '(with the rich_pages wxw-img image-tag convention), Zhihu markdown, Xiaohongshu short note, '
-      + 'X thread split at 280 chars, or blog front-matter. Returns the formatted body, the ordered local image list, and any '
-      + 'adapter follow-up notes. It never uploads images or calls a platform API.',
+      + 'X thread split at 280 chars, or blog front-matter. Auto-injects placeholder captions and '
+      + 'rename hints for figures missing captions or with non-ASCII names. Returns the formatted body, '
+      + 'the ordered local image list, and adapter follow-up notes. It never uploads images or calls a '
+      + 'platform API.',
     parameters: {
       markdown: { type: 'string', required: true, description: 'The raw markdown draft to format.' },
       platform: {
         type: 'string',
         enum: PLATFORM_SET,
         description: `Target channel; defaults to "${defaultPlatform}".`,
+      },
+      brand: {
+        type: 'object',
+        additionalProperties: false,
+        description: 'Optional theme palette (mirrors config/publish.example.json brand); merges over the 实用AI default.',
+        properties: {
+          name: { type: 'string' },
+          accent: { type: 'string' },
+          accentSoft: { type: 'string' },
+          text: { type: 'string' },
+          muted: { type: 'string' },
+        },
       },
     },
     output: {
@@ -102,13 +116,14 @@ export async function apply(ctx: Context, config: Config): Promise<void> {
     },
     execute(args) {
       const platform = args.platform ? asPlatform(args.platform) : defaultPlatform
-      return Promise.resolve(JSON.stringify(format(args.markdown, platform)))
+      const brand = args.brand as Partial<Brand> | undefined
+      return Promise.resolve(JSON.stringify(format(args.markdown, platform, brand)))
     },
     presentCall: args => ({
       card: 'generic',
       title: `Format for ${args.platform ?? defaultPlatform}`,
       kind: 'other',
-      rawInput: { platform: args.platform ?? defaultPlatform },
+      rawInput: { platform: args.platform ?? defaultPlatform, themed: args.brand !== undefined },
     }),
   })))
 }

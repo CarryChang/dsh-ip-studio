@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-07
+
+### 新增
+
+- `ip_studio_format` 自动修复：缺图注的配图在正文注入占位图注（`图 N（图注待补…）`）并生成 fix；图名不合规范（空格/`%`/中文/URL 编码）时输出建议的 ASCII 改名（`fig1.png`）；所有平台的 `notes` 汇总这些修复。
+- 可切换主题：新增 `Brand` 调色（name/accent/accentSoft/text/muted，对齐 `config/publish.example.json`）与 `DEFAULT_BRAND`；公众号 HTML 按主题着色，小红书/blog 注入品牌名。`ip_studio_format` 接受可选 `brand` 入参覆盖默认。
+
+### 变更
+
+- `FormattedOutput.notes` 现在除排版提示外，还包含逐图的图注/命名修复建议。
+
 ## [0.5.0] - 2026-11-07
 
 ### 新增
