@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-07
+
+### 新增
+
+- `ip_studio_format`（公众号）排版专业化：图片与其后的斜体图注自动归组为 `<figure>/<figcaption>`（图注灰显居中）；支持有序列表 `<ol>`、`---` 分隔线、行内代码 `<code>`。
+- `ip_studio_review` 新增专业度结构检查（warn）：`missing-framework`（缺可带走框架）、`missing-caveats`（缺分析师式追问）、`flat-title`（「XX解读」式流水账标题）、`no-bold-lead`（首段未摊核心判断）。
+
 ## [0.2.0] - 2026-11-07
 
 ### 新增

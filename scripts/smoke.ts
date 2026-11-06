@@ -25,6 +25,31 @@ const wechat = format('# 标题\n\n正文**加粗**与 ![图](fig1.png)\n\n> 引
 console.log('\nWECHAT:\n', wechat.content)
 console.log('notes:', wechat.notes)
 
+// Professional sample: figure grouped with its caption, ordered list, hr, inline code.
+const rich = [
+  '# 测题最准的模型，为何只解决了 69.5% 的 agent 任务',
+  '',
+  '**核心判断：把测题能力当成任务能力，是被默默推翻的假设。**',
+  '',
+  '![架构图](fig1.png)',
+  '',
+  '*图 1：该看两条曲线的分叉点——测题与任务能力的落差。*',
+  '',
+  '## 可以带走的框架',
+  '',
+  '1. 拆解能力',
+  '2. 验证能力',
+  '',
+  '用 `attention选择三层范式` 建模。',
+  '',
+  '---',
+  '',
+  '追问：样本量仅 360 条。',
+].join('\n')
+console.log('\nRICH WECHAT (figure+caption group / ol / hr / code):\n', format(rich, 'wechat').content)
+const richReview = reviewDraft(rich, 'wechat')
+console.log('RICH rules:', richReview.findings.map(f => f.rule).join(', ') || '(none)', '| publishable:', richReview.publishable)
+
 const x = format('# T\n\n' + '很长的一段中文内容。'.repeat(30), 'x')
 console.log('\nX THREAD posts:', format(x.content, 'x').content.split('\n\n---\n\n').length)
 

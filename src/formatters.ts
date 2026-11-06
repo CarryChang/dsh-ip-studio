@@ -20,6 +20,7 @@ export interface FormattedOutput {
 const ACCENT = '#4F46E5'
 const ACCENT_SOFT = '#EEF2FF'
 const TEXT = '#1F2329'
+const MUTED = '#8A8F99'
 
 /** Escape HTML control characters in text runs. */
 function esc(text: string): string {
@@ -46,8 +47,27 @@ function inline(text: string, wechat: boolean): string {
   })
   out = out.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>')
   out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+  out = out.replace(/`([^`]+)`/g, `<code style="background:${ACCENT_SOFT};color:${TEXT};padding:1px 6px;border-radius:4px;font-size:90%">$1</code>`)
   out = out.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>')
   return out
+}
+
+/** A caption is a lone italic line: `*…*` or `_…_`. It pairs with the figure above it. */
+function isCaption(text: string): boolean {
+  return /^\*[^*\n]+\*$/.test(text) || /^_[^_\n]+_$/.test(text)
+}
+
+/** Strip the italic wrapper from a caption line. */
+function captionText(text: string): string {
+  return text.trim().replace(/^[*_]/, '').replace(/[*_]$/, '').trim()
+}
+
+/** A lone image line `![alt](src)` eligible to be grouped with a following caption. */
+function standaloneImage(rows: string[]): string | null {
+  if (rows.length !== 1) return null
+  const m = (rows[0] ?? '').match(/^!\[[^\]]*\]\(([^)]+?)\)\s*$/)
+  if (!m) return null
+  return (m[1] ?? '').replace(/\s+["'].*["']\s*$/, '').trim()
 }
 
 /** Render GitHub markdown tables to HTML tables; WeChat needs them as images instead. */
@@ -60,16 +80,35 @@ function renderTable(block: string[]): { html: string; isTable: boolean } {
   return { html: `<table style="border-collapse:collapse;width:100%;margin:1em 0"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table>`, isTable: true }
 }
 
-/** Convert markdown to inline-styled WeChat HTML. */
+/** Convert markdown to inline-styled WeChat HTML, grouping figures with their captions. */
 function toWechatHtml(md: string): string {
   const blocks = md.replace(/\r\n/g, '\n').split(/\n{2,}/)
   const out: string[] = []
-  for (const block of blocks) {
-    const rows = block.split('\n')
+  for (let i = 0; i < blocks.length; i++) {
+    const rows = (blocks[i] ?? '').split('\n')
     const first = rows[0] ?? ''
     const second = rows[1] ?? ''
+
+    // Figure: a lone image line, optionally followed by a lone italic caption block.
+    const img = standaloneImage(rows)
+    if (img !== null) {
+      const next = (blocks[i + 1] ?? '').trim()
+      if (next && !next.includes('\n') && isCaption(next)) {
+        out.push(`<figure style="margin:1.2em 0;text-align:center">${imgTag(img)}`
+          + `<figcaption style="font-style:italic;color:${MUTED};font-size:14px;line-height:1.6;margin:6px 0 0">${esc(captionText(next))}</figcaption></figure>`)
+        i++
+        continue
+      }
+      out.push(imgTag(img))
+      continue
+    }
+
     if (rows.length >= 2 && /^\s*\|/.test(first) && /^\s*\|[\s:|-]+\|/.test(second)) {
       out.push(renderTable(rows).html)
+      continue
+    }
+    if (rows.length === 1 && /^\s*([-*_])\s*(\1\s*){2,}$/.test(first)) {
+      out.push(`<hr style="border:none;border-top:1px solid #e6e8eb;margin:1.6em 0">`)
       continue
     }
     const heading = first.match(/^(#{1,4})\s+(.*)$/)
@@ -92,9 +131,13 @@ function toWechatHtml(md: string): string {
       out.push(`<ul style="padding-left:1.4em;color:${TEXT};line-height:1.75">${items}</ul>`)
       continue
     }
+    if (rows.every(r => /^\d+[.)]\s+/.test(r))) {
+      const items = rows.map(r => `<li style="margin:4px 0">${inline(r.replace(/^\d+[.)]\s+/, ''), true)}</li>`).join('')
+      out.push(`<ol style="padding-left:1.5em;color:${TEXT};line-height:1.75">${items}</ol>`)
+      continue
+    }
     const joined = inline(rows.join('<br>'), true)
-    if (rows.length === 1 && /^<img\b/.test(joined)) out.push(joined)
-    else out.push(`<p style="margin:0.9em 0;line-height:1.8;color:${TEXT};font-size:16px">${joined}</p>`)
+    out.push(`<p style="margin:0.9em 0;line-height:1.8;color:${TEXT};font-size:16px">${joined}</p>`)
   }
   return out.join('\n')
 }

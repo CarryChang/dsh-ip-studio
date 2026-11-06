@@ -191,6 +191,24 @@ export function reviewDraft(md: string, platform: Platform): ReviewReport {
     })
   }
 
+  // Professional-structure gates for long-form: the traits that separate an analyst draft from a
+  // flat summary. Warn-only so a legitimate draft is never hard-blocked by structure alone.
+  if (platform === 'wechat' || platform === 'zhihu' || platform === 'blog') {
+    if (!/可以带走|带走的|框架|模型|公式|分层|范式/.test(md)) {
+      findings.push({ rule: 'missing-framework', severity: 'warn', message: '未看到「可带走框架」：给读者一个命名模型 / 公式 / 分层，比散装观点更专业、更易被引用。', lines: [] })
+    }
+    if (!/追问|局限|样本|评测|分布|成本|预印本|失败|消融|未测/.test(md)) {
+      findings.push({ rule: 'missing-caveats', severity: 'warn', message: '缺分析师式追问（样本量 / 评测闭环 / 成本 / 未测清单）——这一段是专业感的凭据。', lines: [] })
+    }
+    if (firstHeading(md).length > 0 && /(论文|文章)?解读|读后感|综述|介绍|导读$/.test(firstHeading(md))) {
+      findings.push({ rule: 'flat-title', severity: 'warn', message: '标题偏流水账（「XX 解读」式）：改成带判断、能被记住的标题。', lines: [1] })
+    }
+    const lead = md.split(/\n{2,}/).find(b => b.trim() && !/^#/.test(b.trim()) && !/^!\[/.test(b.trim())) ?? ''
+    if (lead && !/\*\*[^*]+\*\*/.test(lead)) {
+      findings.push({ rule: 'no-bold-lead', severity: 'warn', message: '首段未把核心判断加粗摊出来：第一段就给结论，事实还原放其后。', lines: [] })
+    }
+  }
+
   const publishable = !findings.some(f => f.severity === 'blocker')
   return { platform, chineseChars, imageCount: refs.length, titleLength, findings, publishable }
 }
