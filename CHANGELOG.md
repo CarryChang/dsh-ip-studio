@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-11-07
+
+### 文档
+
+- `references/platform-adapters.md` 新增“安装配图用可选 Python 依赖（国内加速）”：`pymupdf`/`Pillow` 走清华镜像 `pypi.tuna.tsinghua.edu.cn`，并建议先探测再装、优先用已内置这些库的解释器；SKILL.md 加了指针。
+
 ## [0.6.1] - 2026-11-07
 
 ### 修复

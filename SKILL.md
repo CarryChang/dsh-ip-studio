@@ -45,6 +45,7 @@ agent_created: true
 - 三类图各司其职：① 用视觉模型解读并抽取 **PDF 原图**（按图注关键词定位裁剪）；② 每张 **数据表转 PNG**（微信不渲染表格）；③ 为「可带走框架」**自绘一张概念/流程/分层示意图**——这一步是纯文字稿最缺、也最能拉开专业度。
 - 每张图配一句斜体中文图注说明「该看什么」；图紧挨其支撑的论断；文件名 ASCII 无空格。
 - 优先复用 DSH 已有能力（document/pdf、多模态视觉模型、ImageGen、deliverables），不在本插件里重造。
+- 若需装 `pymupdf` / `Pillow` 做抽图、表格转图，用清华镜像加速（见 `references/platform-adapters.md`）。
 
 ## 措辞红线（`ip_studio_review` 会逐条报出）
 

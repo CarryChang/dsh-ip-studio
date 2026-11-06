@@ -20,6 +20,21 @@
   adapter 前用任意 `md → PNG` 渲染器（如 Pillow + 中文字体）把表转成图再贴。
 - **凭据**：见下。
 
+## 安装配图用的可选 Python 依赖（国内加速）
+
+抽 PDF 原图与表格转图会用到可选的 Python 库（`pymupdf`、`Pillow`）；**插件本身零依赖**，这些只由 adapter / 绘图脚本需要。
+国内装 PyPI 建议走清华镜像，避免大包（pymupdf 带原生二进制、约 20 MB）长时间下载：
+
+```sh
+python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pymupdf pillow
+# 或持久化配置镜像，之后所有 pip 安装都走它：
+python -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+- 已配好镜像时，安装日志会显示 `Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple`，无需再手动加 `-i`。
+- 先探测再装，避免每次启动重复下载：`python -c "import pymupdf"` 成功就跳过 pip 步骤。
+- 优先用系统里已带这些库的解释器（本仓库作者用的是 workbuddy 托管 python），能直接省掉安装。
+
 ## 凭据与配置（安全）
 
 - 复制 `config/publish.example.json` 到本插件目录**之外**，填入真实 `appid`/`secret`，
