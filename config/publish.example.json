@@ -1,0 +1,24 @@
+{
+  "_comment": "Template only. Copy to a path OUTSIDE this package (never commit real values), then point DSH_IP_STUDIO_PUBLISH_CONFIG at it, or pass --config to your publish script. This package ships no secrets and runs no install script.",
+  "platform": "wechat",
+  "account": {
+    "displayName": "实用AI",
+    "author": "实用AI"
+  },
+  "brand": {
+    "accent": "#4F46E5",
+    "accentSoft": "#EEF2FF",
+    "text": "#1F2329",
+    "muted": "#8A8F99"
+  },
+  "credentials": {
+    "_comment": "Fill in the external file, not this template. WeChat example:",
+    "appid": "",
+    "secret": ""
+  },
+  "adapter": {
+    "_comment": "Publishing is delegated to a user-installed script; DSH only builds formatted output. Keep API calls behind manual review.",
+    "command": "",
+    "workingDir": ""
+  }
+}

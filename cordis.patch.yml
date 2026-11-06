@@ -1,0 +1,11 @@
+# dsh-ip-studio bundle patch.
+# Mounts one plugin that contributes the 认知差 writing-methodology skill and
+# registers the ip_studio_review / ip_studio_format tools. It adds no network,
+# subprocess, or credential surface: publishing stays an external, user-owned
+# adapter (see config/publish.example.json and references/platform-adapters.md).
+
+- insert:
+    - id: ip-studio
+      name: 'dsh-ip-studio'
+      config:
+        defaultPlatform: wechat

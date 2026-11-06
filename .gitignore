@@ -1,0 +1,13 @@
+# Build output IS committed so `dsh plugin add github:CarryChang/dsh-ip-studio` works without a build step.
+# Do NOT ignore lib/.
+
+node_modules/
+.pnpm-store/
+*.tsbuildinfo
+.DS_Store
+
+# Never commit local credentials if a user drops a real config next to the example.
+config/publish.json
+**/wechat_config.json
+**/*.token_cache
+**/*.token_cache.json

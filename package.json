@@ -1,0 +1,98 @@
+{
+  "name": "dsh-ip-studio",
+  "description": "Content/IP studio for DeepSeek Harness: a 认知差 (perceptive-gap) writing methodology skill plus deterministic draft-review and multi-platform formatting tools (WeChat / Zhihu / Xiaohongshu / X / blog). Zero network, zero credentials, zero install scripts.",
+  "version": "0.1.0",
+  "icon": "./icon.svg",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./skill": "./SKILL.md",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/methodology.js",
+    "lib/review.js",
+    "lib/formatters.js",
+    "lib/types/**/*.d.ts",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/*.json",
+    "SKILL.md",
+    "config/publish.example.json",
+    "references/*.md",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "tsconfig.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "实用AI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarryChang/dsh-ip-studio.git"
+  },
+  "homepage": "https://github.com/CarryChang/dsh-ip-studio#readme",
+  "bugs": {
+    "url": "https://github.com/CarryChang/dsh-ip-studio/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "plugin",
+    "content-writing",
+    "personal-ip",
+    "wechat",
+    "marketing"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json && node --import tsx/esm scripts/smoke.ts",
+    "prepack": "node scripts/prepack.mjs"
+  },
+  "engines": {
+    "dsh": "^0.2.0-rc.1 || ^0.2.1-rc.1 || ^0.2.2-alpha.2",
+    "node": "^22.19.0 || >=24.0.0",
+    "pnpm": ">=11.7.0 <12"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1 || ^4.0.6-alpha.1",
+    "@deepseek-ai/schemastery": "*",
+    "@deepseek-ai/dsh-tools": "^0.2.0-rc.1 || ^0.2.1-rc.1 || ^0.2.2-alpha.2",
+    "@deepseek-ai/dsh-skill": "^0.2.0-rc.1 || ^0.2.1-rc.1 || ^0.2.2-alpha.2"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": { "optional": true },
+    "@deepseek-ai/schemastery": { "optional": true },
+    "@deepseek-ai/dsh-tools": { "optional": true },
+    "@deepseek-ai/dsh-skill": { "optional": true }
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.2",
+    "@deepseek-ai/schemastery": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "0.2.1-rc.3",
+    "@deepseek-ai/dsh-skill": "0.2.1-rc.3",
+    "@types/node": "^22.19.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.6.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "packageManager": "pnpm@11.7.0"
+}
