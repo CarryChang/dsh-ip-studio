@@ -27,3 +27,8 @@ console.log('notes:', wechat.notes)
 
 const x = format('# T\n\n' + '很长的一段中文内容。'.repeat(30), 'x')
 console.log('\nX THREAD posts:', format(x.content, 'x').content.split('\n\n---\n\n').length)
+
+// Text-only long-form draft must be blocked for WeChat by no-figures.
+const textOnly = '# 一个只有文字的稿子\n\n' + '正文没有任何图片，纯文字论述。'.repeat(120)
+const r2 = reviewDraft(textOnly, 'wechat')
+console.log('\nTEXT-ONLY publishable(wechat):', r2.publishable, '| rules:', r2.findings.map(f => f.rule).join(', '))
