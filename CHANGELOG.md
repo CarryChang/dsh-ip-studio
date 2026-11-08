@@ -4,6 +4,19 @@
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-08
+
+### 新增
+
+- **可移植 Agent Skill**：新增 `skills/dsh-ip-studio/`，以开放 `SKILL.md` 格式打包「认知差写作宪法 + 三个确定性命令」，无需 DeepSeek Harness 即可装进 Claude Code / Cursor / Copilot 等 20+ agent（响应 Agensi.io 反馈：插件内的技能/命令可单独收录为技能）。含 `SKILL.md`（标准 frontmatter）、`references/methodology.md`（完整宪法）、`references/platform-adapters.md`（发布/主题色契约）。
+- **零依赖 Node CLI**：`skills/dsh-ip-studio/scripts/ip-studio.mjs` 提供 `outline` / `review` / `format` 三个子命令，读 `--input <文件>` 或 stdin，输出 JSON；`--platform`、`--title-hint`、`--brand`（内联 JSON 或文件）。纯本地、零网络、零凭据。
+- **单一真相来源**：`scripts/build-portable.mjs` 从已编译的 DSH-free 模块 `lib/{review,formatters,outline}.js` 生成技能运行时 `skills/dsh-ip-studio/scripts/lib/`；若这些模块出现运行时 import 会当场报错，防止漂移。产物入库，GitHub 克隆/`dsh plugin add github:` 与技能拷贝均无需本地构建。
+
+### 变更
+
+- `package.json`：`check` 与 `prepack` 现在串联 `build:portable`；`files`/`exports` 纳入 `skills/**`；版本升至 0.8.0。
+- README（中英）新增「当独立技能用 / Use as a standalone agent skill」小节。
+
 ## [0.7.2] - 2026-11-07
 
 ### 变更

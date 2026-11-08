@@ -31,3 +31,8 @@
 ## 写作红线（改 review 的规则集时同步）
 
 `src/methodology.ts` 的宪法、`src/review.ts` 的 `BANNED` 词表、`SKILL.md` 三处必须一致：改一处即改三处。
+
+## 可移植 Agent Skill：运行时从 lib/ 生成，勿手改
+
+- `skills/dsh-ip-studio/` 是面向 Claude Code / Cursor / Copilot 的开放 `SKILL.md` 形态（Agensi.io 收录的就是它），与 DSH cordis 插件并存、互不替代。
+- 确定性逻辑只在 `src/*.ts` 写一次：`scripts/build-portable.mjs` 把编译产物 `lib/{review,formatters,outline}.js`（必须零运行时 import）拷进 `skills/dsh-ip-studio/scripts/lib/`。改逻辑改 `src/`，然后 `pnpm run build && pnpm run build:portable`，**绝不手改** `skills/**/scripts/lib/*`。

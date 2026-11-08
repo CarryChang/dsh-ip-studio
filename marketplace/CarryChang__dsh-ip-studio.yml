@@ -1,0 +1,6 @@
+url: https://github.com/CarryChang/dsh-ip-studio
+name: CarryChang/dsh-ip-studio
+category: tools
+description:
+  en: 'Content and personal-IP writing toolkit for DSH: one 认知差 (perceptive-gap) writing-methodology skill plus three offline tools. ip_studio_outline turns extracted source material into a seven-part draft skeleton; ip_studio_review red-lines and layout-checks a draft (banned phrasing, leftover Markdown tables, non-ASCII image names, figure presence and caption coverage); ip_studio_format renders a draft into per-channel output (WeChat inline-style HTML, Zhihu, Xiaohongshu, X thread, blog front-matter). Ships no network calls, credentials or install scripts.'
+  zh: '面向 DSH 的内容与个人 IP 写作工具包：一个「认知差」写作方法论技能，外加三个纯本地工具。ip_studio_outline 把抽取到的素材正文生成七段式草稿骨架；ip_studio_review 对草稿做红线与排版终检（违禁词、残留 Markdown 表格、非 ASCII 图片名、配图有无与图注覆盖率）；ip_studio_format 把草稿排版成各平台成品（公众号内联样式 HTML、知乎、小红书、X thread、博客 front-matter）。不联网、不含凭据、无安装脚本。'

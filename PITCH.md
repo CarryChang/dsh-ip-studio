@@ -34,6 +34,14 @@ ai-agent
 English:
 > dsh-ip-studio turns papers, notes and news into publish-ready personal-IP drafts. Install in one line (`dsh plugin --profile web add github:CarryChang/dsh-ip-studio`), no local build needed — zero network, zero install scripts, credentials kept outside the package.
 
+## 作为独立 Agent Skill 推广（Agensi.io / Claude Code / Cursor / Copilot）
+
+本插件的方法论与三个命令同时以开放 `SKILL.md` 格式打包在 `skills/dsh-ip-studio/`，不依赖 DeepSeek Harness，
+一行拷入任意 agent 的技能目录即装即用（`outline` / `review` / `format` 由零依赖 Node CLI 提供）。面向 Agensi.io 这类
+AI agent 技能市场，可直接把其中的技能单独收录；一句话：
+
+> dsh-ip-studio 把论文/素材/资讯按认知差整理成可发布成稿，作为通用 Agent Skill 装进 Claude Code / Cursor / Copilot 等 20+ agent（`cp -r skills/dsh-ip-studio ~/.claude/skills/`），零网络、零凭据、零安装脚本。
+
 ## 能力矩阵（README/发帖配图用）
 
 | 能力 | 载体 | 说明 |

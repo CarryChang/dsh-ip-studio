@@ -12,6 +12,9 @@ agent_created: true
 排版产物由 `ip_studio_format` 生成，发布调用平台 API 由外部、用户自持的 adapter 完成（见
 `references/platform-adapters.md`），插件不含凭据、不联网、无安装脚本。
 
+> 同一套方法论与三个命令另以开放 `SKILL.md` 格式打包在 [`skills/dsh-ip-studio/`](./skills/dsh-ip-studio)，
+> 无需 DSH 即可装进 Claude Code / Cursor / Copilot 等 agent（零依赖 Node CLI 跑 `outline`/`review`/`format`）。
+
 ## 何时触发
 
 - 用户给出 PDF / txt / 网页 dump / 截图，说「按 IP 整理」「写成公众号」「解读一下」。

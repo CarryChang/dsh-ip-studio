@@ -33,6 +33,9 @@ kept outside the package.
 - **Publishing layer (not bundled)** — see [`references/platform-adapters.md`](./references/platform-adapters.md).
   Credentials come from the [`config/publish.example.json`](./config/publish.example.json) template via an
   external path; the actual platform API call is a user-owned script.
+- **Portable Agent Skill** — the same skill + the three commands packaged under
+  [`skills/dsh-ip-studio/`](./skills/dsh-ip-studio) so they install into Claude Code / Cursor / Copilot
+  with no DeepSeek Harness (see [Use as a standalone agent skill](#use-as-a-standalone-agent-skill-no-deepseek-harness)).
 
 ## Install
 
@@ -58,6 +61,25 @@ dsh --profile web --dump-config | grep ip-studio   # expect a “# == dsh-ip-stu
 
 After boot, the absence of `ip-studio ... failed to import` / `did not activate` means registration
 succeeded. Profiles load the built `lib/`, so re-run `pnpm run build` and restart after editing `src/*.ts`.
+
+## Use as a standalone agent skill (no DeepSeek Harness)
+
+The methodology and the three deterministic commands also ship as a portable
+[Agent Skill](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview) under
+[`skills/dsh-ip-studio/`](./skills/dsh-ip-studio) — the open `SKILL.md` format that installs into
+Claude Code, Cursor, Copilot and 20+ other agents (and is what marketplaces such as Agensi.io list).
+It runs the same `outline` / `review` / `format` logic through a dependency-free Node CLI, so it works
+without `dsh`. Copy the folder into your agent's skills directory:
+
+```sh
+# Claude Code (user-level):
+cp -r skills/dsh-ip-studio ~/.claude/skills/
+# or project-level: .claude/skills/dsh-ip-studio ; Cursor / Copilot use the same SKILL.md layout.
+```
+
+Then just ask: *"turn this paper into a perceptive-gap WeChat draft."* The agent reads
+`skills/dsh-ip-studio/SKILL.md`, drafts from `references/methodology.md`, and calls
+`node scripts/ip-studio.mjs outline|review|format` for the deterministic steps. Requires only Node.
 
 ## Use
 

@@ -22,6 +22,7 @@
   - `ip_studio_review`：草稿红线与排版终检（违禁词 / Markdown 表格残留 / 图片名 ASCII / 图数 / 标题与中文字数预算），返回 `{ findings, publishable }`。
   - `ip_studio_format`：Markdown → 公众号内联样式 HTML（复用 `rich_pages wxw-img` 图片标签规范）/ 知乎 / 小红书 / X thread / blog front-matter，返回 `{ content, notes }`。
 - **发布层（不内置）**：见 [`references/platform-adapters.md`](./references/platform-adapters.md)。凭据走 [`config/publish.example.json`](./config/publish.example.json) 模板 + 外部路径注入；调用平台 API 由用户自持脚本完成。
+- **可移植 Agent Skill**：同样的技能 + 三个命令已打包在 [`skills/dsh-ip-studio/`](./skills/dsh-ip-studio)，无需 DeepSeek Harness 也能装进 Claude Code / Cursor / Copilot（见下「当独立技能用」）。
 
 ## 安装
 
@@ -47,6 +48,23 @@ dsh --profile web --dump-config | grep ip-studio   # 应看到 “# == dsh-ip-st
 
 启动 profile 后若日志无 `ip-studio ... failed to import` / `did not activate`，即注册成功。
 改 `src/*.ts` 后需重新 `pnpm run build` 并重启（加载的是 `lib/` 产物）。
+
+## 当独立技能用（不依赖 DeepSeek Harness）
+
+方法论与三个确定性命令同时以通用 [Agent Skill](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
+形式提供，在 [`skills/dsh-ip-studio/`](./skills/dsh-ip-studio)——即 Claude Code、Cursor、Copilot 等 20+ agent
+共用的开放 `SKILL.md` 格式（也是 Agensi.io 这类市场收录的形态）。它用一个零依赖的 Node CLI 跑同一套
+`outline` / `review` / `format` 逻辑，不装 `dsh` 也能用。把整个目录拷进你的 agent 技能目录即可：
+
+```sh
+# Claude Code（用户级）：
+cp -r skills/dsh-ip-studio ~/.claude/skills/
+# 或项目级 .claude/skills/dsh-ip-studio；Cursor / Copilot 用同样的 SKILL.md 布局。
+```
+
+然后直接说：「把这篇论文按认知差整理成公众号稿」。agent 会读 `skills/dsh-ip-studio/SKILL.md`，
+按 `references/methodology.md` 起草，并调用 `node scripts/ip-studio.mjs outline|review|format` 完成确定性步骤。
+只需 Node。
 
 ## 用法
 

@@ -1,7 +1,7 @@
 {
   "name": "dsh-ip-studio",
   "description": "Content/IP studio for DeepSeek Harness: a 认知差 (perceptive-gap) writing methodology skill plus deterministic draft-review and multi-platform formatting tools (WeChat / Zhihu / Xiaohongshu / X / blog). Zero network, zero credentials, zero install scripts.",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "icon": "./icon.svg",
   "type": "module",
   "main": "lib/index.js",
@@ -15,6 +15,7 @@
     "./skill": "./SKILL.md",
     "./icon": "./icon.svg",
     "./package.json": "./package.json",
+    "./skills/*": "./skills/*",
     "./locale/*.json": "./locale/*.json"
   },
   "files": [
@@ -27,6 +28,7 @@
     "icon.svg",
     "locale/*.json",
     "SKILL.md",
+    "skills/**/*",
     "config/publish.example.json",
     "references/*.md",
     "README.md",
@@ -60,7 +62,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "tsc -p tsconfig.json && node --import tsx/esm scripts/smoke.ts",
+    "build:portable": "node scripts/build-portable.mjs",
+    "check": "tsc -p tsconfig.json && node scripts/build-portable.mjs && node --import tsx/esm scripts/smoke.ts",
     "prepack": "node scripts/prepack.mjs"
   },
   "engines": {
