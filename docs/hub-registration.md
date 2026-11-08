@@ -4,8 +4,9 @@ DSH hub 不接受 PR：插件仓库由 hub 的同步循环 + 管理员 triage �
 当同步循环把 `dsh-ip-studio` 标记为「未分类」时，直接复制下面两段即可。
 
 前置条件：
-- 仓库已公开，并打上 topics：`dsh`、`dsh-plugin`、`content-writing`、`personal-ip`、`wechat`。
+- 仓库已公开，并打上 topics：`dsh-plugin`、`content-writing`、`personal-ip`、`perceptive-gap`、`wechat`、`marketing`、`agent-skill`、`ai-agent`。
 - `package.json` 声明了 `dsh.bundle.patch`（`cordis.patch.yml`）→ 管理面板自动推导为 `bundle · cordis`，无需人工覆盖。
+- `package.json` 带中文简介（中英双语 `description`）、`homepage`、以及上述 `keywords`；`locale/{zh,en}.json` 的 `meta.description` 为双语展示文案。生成器以 `package.json` + locale 文件为索引数据源。
 
 ## catalog.source.json（repos 数组追加一行）
 

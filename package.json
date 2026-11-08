@@ -1,6 +1,6 @@
 {
   "name": "dsh-ip-studio",
-  "description": "Content/IP studio for DeepSeek Harness: a 认知差 (perceptive-gap) writing methodology skill plus deterministic draft-review and multi-platform formatting tools (WeChat / Zhihu / Xiaohongshu / X / blog). Zero network, zero credentials, zero install scripts.",
+  "description": "认知差内容工作室：把论文/素材/资讯整理成可发布成稿的个人 IP 引擎，含确定性红线终检与多平台排版，并可作为通用 Agent Skill 装进 Claude Code / Cursor / Copilot。Perceptive-gap content studio for DeepSeek Harness: material → publish-ready drafts, with deterministic red-line review, multi-platform formatting, and a portable Agent Skill.",
   "version": "0.8.0",
   "icon": "./icon.svg",
   "type": "module",
@@ -46,7 +46,7 @@
     "type": "git",
     "url": "git+https://github.com/CarryChang/dsh-ip-studio.git"
   },
-  "homepage": "https://github.com/CarryChang/dsh-ip-studio#readme",
+  "homepage": "https://github.com/CarryChang/dsh-ip-studio",
   "bugs": {
     "url": "https://github.com/CarryChang/dsh-ip-studio/issues"
   },
@@ -55,10 +55,19 @@
     "deepseek-harness",
     "dsh-plugin",
     "plugin",
+    "agent-skill",
+    "claude-code",
+    "cursor",
+    "copilot",
     "content-writing",
     "personal-ip",
+    "perceptive-gap",
+    "cognitive-gap",
     "wechat",
-    "marketing"
+    "zhihu",
+    "xiaohongshu",
+    "marketing",
+    "ai-agent"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

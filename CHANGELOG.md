@@ -16,6 +16,7 @@
 
 - `package.json`：`check` 与 `prepack` 现在串联 `build:portable`；`files`/`exports` 纳入 `skills/**`；版本升至 0.8.0。
 - README（中英）新增「当独立技能用 / Use as a standalone agent skill」小节。
+- 面向 DSH hub 收录的元数据：`package.json` 补一句中文简介（中英双语 `description`）、将 `homepage` 挂为干净绝对 URL、扩充 `keywords` 作为发现话题（新增 `agent-skill`/`claude-code`/`cursor`/`copilot`/`perceptive-gap`/`zhihu`/`xiaohongshu`/`ai-agent` 等）；`locale/{zh,en}.json` 的 `meta.description` 同步标注可作为通用 Agent Skill 装进多 agent。（DSH 插件市场生成器从 `package.json` + locale 文件构建索引，上述字段即收录展示与检索依据。）
 
 ## [0.7.2] - 2026-11-07
 
